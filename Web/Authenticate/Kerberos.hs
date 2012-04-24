@@ -30,7 +30,7 @@ import System.Process (readProcessWithExitCode)
 import System.Timeout (timeout)
 import System.Exit (ExitCode(..))
 
--- | Occurreable results of a Kerberos login
+-- | Results of a Kerberos login
 data KerberosAuthResult = Ok
                         | NoSuchUser
                         | WrongPassword
@@ -38,18 +38,18 @@ data KerberosAuthResult = Ok
                         | UnknownError Text
 
 instance Show KerberosAuthResult where
-  show Ok                 = "Login sucessful"
+  show Ok                 = "Login successful"
   show NoSuchUser         = "Wrong username"
   show WrongPassword      = "Wrong password"
-  show TimeOut            = "kinit respone timeout"
-  show (UnknownError msg) = "Unkown error: " ++ T.unpack msg
+  show TimeOut            = "kinit response timeout"
+  show (UnknownError msg) = "Unknown error: " ++ T.unpack msg
 
 
 -- Given the errcode and stderr, return error-value
 interpretError :: Int -> Text -> KerberosAuthResult
 interpretError _ errmsg = fromJust . msum $
     ["Client not found in Kerberos database while getting" --> NoSuchUser,
-     "Preauthentication failed while getting" --> WrongPassword,
+     "Pre-authentication failed while getting" --> WrongPassword,
      Just $ UnknownError errmsg]
   where
     substr --> kError = guard (substr `T.isInfixOf` errmsg) >> Just kError

@@ -49,7 +49,7 @@ instance Show KerberosAuthResult where
 interpretError :: Int -> Text -> KerberosAuthResult
 interpretError _ errmsg = fromJust . msum $
     ["Client not found in Kerberos database while getting" --> NoSuchUser,
-     "Pre-authentication failed while getting" --> WrongPassword,
+     "Preauthentication failed while getting" --> WrongPassword,
      Just $ UnknownError errmsg]
   where
     substr --> kError = guard (substr `T.isInfixOf` errmsg) >> Just kError
